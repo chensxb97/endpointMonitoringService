@@ -5,34 +5,34 @@ import StatusList from './StatusList'
 
 const { Content } = Layout
 
-export default function Navigation() {
-    const Dashboard = 'Dashboard'
-    const CreateEndpoint = 'Create Endpoint'
+const DASHBOARD = 'Dashboard'
+const CREATE_ENDPOINT = 'Create Endpoint'
 
-    const [active, setActive] = useState(Dashboard)
+export default function Navigation() {
+    const [active, setActive] = useState(DASHBOARD)
 
     return (
         <Layout >
             <Content style={{ padding: '24px' }}>
                 <div style={{ marginBottom: '16px' }}>
                     <Button
-                        type={active === Dashboard ? "primary" : ""}
-                        onClick={() => setActive(Dashboard)}
+                        type={active === DASHBOARD ? "primary" : ""}
+                        onClick={() => setActive(DASHBOARD)}
                         style={{ marginRight: '8px' }}
                     >
-                        Dashboard
+                        {DASHBOARD}
                     </Button>
                     <Button
-                        type={active === CreateEndpoint ? "primary" : ""}
-                        onClick={() => setActive(CreateEndpoint)}
+                        type={active === CREATE_ENDPOINT ? "primary" : ""}
+                        onClick={() => setActive(CREATE_ENDPOINT)}
                     >
-                        Create Endpoint
+                        {CREATE_ENDPOINT}
                     </Button>
                 </div>
-                {active === Dashboard && (
+                {active === DASHBOARD && (
                     <StatusList />
                 )}
-                {active === CreateEndpoint && (
+                {active === CREATE_ENDPOINT && (
                     <EndpointForm />
                 )}
             </Content>

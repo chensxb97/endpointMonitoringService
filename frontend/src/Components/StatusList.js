@@ -3,18 +3,20 @@ import Timer from "./Timer"
 import axios from "axios"
 import { Card } from "antd"
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL
+const timeLimit = 5000
+
 const StatusList = () => {
     const [statuses, setStatuses] = useState([])
     const [loading, setLoading] = useState(true)
     const [animateKey, setAnimateKey] = useState(0)
 
-    const backendUrl = process.env.REACT_APP_BACKEND_URL
-    const timeLimit = 5000
-
     const fetchStatuses = async () => {
         try {
             const response = await axios.get(`${backendUrl}/status`)
-            setStatuses(response.data)
+            if (response?.data) {
+                setStatuses(response.data)
+            }
         } catch (error) {
             console.error("Error fetching statuses:", error)
         }

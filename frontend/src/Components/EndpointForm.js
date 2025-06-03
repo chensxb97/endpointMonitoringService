@@ -35,7 +35,7 @@ const EndpointForm = () => {
                     name="endpoint"
                     rules={[{ required: true, message: "Please input the endpoint!" }]}
                 >
-                    <Input placeholder="https://example.com/health" />
+                    <Input placeholder="https://example.com" />
                 </Form.Item>
 
                 <Form.List name="labels">
