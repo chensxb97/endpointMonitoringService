@@ -13,7 +13,7 @@ const Dashboard = () => {
 
     const fetchStatuses = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/api/statuses`)
+            const response = await axios.get(`${backendUrl}/statuses`)
             if (response?.data) {
                 setStatuses(response.data)
             }

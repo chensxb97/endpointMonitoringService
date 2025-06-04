@@ -3,7 +3,6 @@ package web
 import (
 	"encoding/json"
 	"endpointMonitoringService/internal"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -22,9 +21,9 @@ func (s *Server) Start() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", s.rootHandler)
-	mux.HandleFunc("/api/statuses", s.statusHandler)
-	mux.HandleFunc("/api/targets", s.targetsHandler)
-	mux.HandleFunc("/api/targets/create", s.createTargetHandler)
+	mux.HandleFunc("/statuses", s.statusHandler)
+	mux.HandleFunc("/targets/create", s.createTargetHandler)
+	mux.HandleFunc("/targets", s.targetsHandler)
 
 	// Add CORS middleware
 	handler := cors.New(cors.Options{
@@ -43,23 +42,30 @@ func (s *Server) rootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) createTargetHandler(w http.ResponseWriter, r *http.Request) {
-	bodyBytes, _ := io.ReadAll(r.Body)
+	bodyBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
 
 	var payload internal.EndpointRecord
 	if err := json.Unmarshal(bodyBytes, &payload); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		fmt.Println("Unmarshal error:", err)
 		return
 	}
 
-	err := s.EndpointController.CreateEndpoints(payload)
+	err = s.EndpointController.CreateEndpoints(payload)
 	if err != nil {
 		http.Error(w, "Failed to create target", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(`{"message": "Endpoint created successfully"}`)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"success": "true",
+		"message": "Target created successfully",
+	})
 }
 
 func (s *Server) statusHandler(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +75,23 @@ func (s *Server) statusHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) targetsHandler(w http.ResponseWriter, r *http.Request) {
-	targets := s.EndpointController.GetEndpointCache()
+	endpointCache := s.EndpointController.GetEndpointCache()
+	if len(endpointCache) == 0 {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode([]map[string]interface{}{})
+		return
+	}
+
+	// Converting the list of records to the appropriate HTTP SD payload format
+	var targets []map[string]interface{}
+	for _, endpoint := range endpointCache {
+		target := map[string]interface{}{
+			"targets": []string{endpoint.Endpoint},
+			"labels":  endpoint.Labels,
+		}
+		targets = append(targets, target)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(targets); err != nil {
 		http.Error(w, "Failed to encode targets", http.StatusInternalServerError)

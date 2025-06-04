@@ -10,7 +10,7 @@ const EndpointForm = () => {
 
     const onFinish = async (values) => {
         try {
-            await axios.post(`${backendUrl}/api/targets/create`, {
+            await axios.post(`${backendUrl}/targets/create`, {
                 endpoint: values.endpoint,
                 labels: values.labels || []
             }, {
