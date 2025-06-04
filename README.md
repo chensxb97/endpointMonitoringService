@@ -10,12 +10,12 @@ This project requires setting up 4 different components: 1) React Frontend, 2) G
 ### Usage
 
 1. Build Dependencies
-```javascript
+```bash
 cd frontend/ && npm install
 ```
 
 2. Run Frontend
-```javascript
+```bash
 npm run start
 ```
 
