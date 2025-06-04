@@ -26,7 +26,7 @@ const EndpointForm = () => {
     }
 
     return (
-        <Card style={{ maxWidth: 600, maxHeight: 500, margin: "0 auto" }}>
+        <Card style={{ maxWidth: 600, margin: "0 auto" }}>
             <Form form={form} onFinish={onFinish} layout="vertical" autoComplete="off">
                 <Form.Item
                     label="Endpoint"
@@ -39,9 +39,9 @@ const EndpointForm = () => {
                 <Form.List name="labels">
                     {(fields, { add, remove }) => (
                         <>
-                            <label>Labels</label>
+                            <div style={{ marginBottom: 10 }}>Labels</div>
                             {fields.map(({ key, name, ...restField }) => (
-                                <Space key={key} style={{ display: "flex", marginBottom: 8 }} align="baseline">
+                                <Space key={key} style={{ display: "flex", justifyContent: "center", alignItems: "center" }} align="baseline">
                                     <Form.Item
                                         {...restField}
                                         name={[name, "key"]}
@@ -56,7 +56,7 @@ const EndpointForm = () => {
                                     >
                                         <Input placeholder="Value" />
                                     </Form.Item>
-                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                    <MinusCircleOutlined style={{ position: 'relative', bottom: 12 }} onClick={() => remove(name)} />
                                 </Space>
                             ))}
                             <Form.Item>
@@ -67,8 +67,6 @@ const EndpointForm = () => {
                         </>
                     )}
                 </Form.List>
-
-                {/* Submit */}
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
                         Submit Endpoint
