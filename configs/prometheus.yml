@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+- job_name: "blackbox-exporter"
+  metrics_path: /probe
+  # No need for static params
+  http_sd_configs: # Implement service discovery
+    - url: http://localhost:8000/targets # HTTP SD endpoint
+      refresh_interval: 5m
+      
+  relabel_configs:
+  - source_labels: [__address__]
+    target_label: __param_target # Define target query parameter
+  - source_labels: [__param_target] # Create instance label from target param
+    target_label: instance
+  - source_labels: [__meta_module] # Define module query parameter
+    target_label: __param_module
+  - source_labels: [__meta_module] # Define module label, same operation for remaining labels
+    target_label: module
+  - source_labels: [__meta_application]
+    target_label: application
+  - source_labels: [__meta_team]
+    target_label: team
+  - source_labels: [__meta_environment]
+    target_label: environment
+  - source_labels: [__meta_datacenter]
+    target_label: datacenter
+  - target_label: __address__
+    replacement: localhost:9115 # Blackbox exporter endpoint
