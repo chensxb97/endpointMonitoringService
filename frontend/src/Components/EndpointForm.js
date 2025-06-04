@@ -1,6 +1,6 @@
 import React from "react"
 import axios from "axios"
-import { Card, Form, Input, Button, Space } from "antd"
+import { Card, Form, Input, Button, Space, message } from "antd"
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL
@@ -18,10 +18,9 @@ const EndpointForm = () => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log("Submitted endpoint record!")
-            form.resetFields()
+            message.success("Submitted endpoint record!")
         } catch (error) {
-            console.error("Error creating endpoint:", error)
+            message.error("Error creating endpoint:", error)
         }
     }
 
