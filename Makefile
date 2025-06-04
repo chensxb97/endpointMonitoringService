@@ -1,11 +1,10 @@
 APP_NAME := endpointMonitoringService
 SRC := ./cmd/main.go
-CONFIG := ./config.yaml
 
 # Commands
 run:
 	@echo "Running $(APP_NAME)..."
-	go run $(SRC) $(CONFIG)
+	go run $(SRC)
 
 build:
 	@echo "Building $(APP_NAME)..."
@@ -23,10 +22,6 @@ lint:
 	@echo "Linting code..."
 	golangci-lint run
 
-check-config:
-	@echo "Validating YAML config..."
-	yq e . $(CONFIG)
-
 help:
 	@echo "Available commands:"
 	@echo "  run          - Run the app"
@@ -34,4 +29,3 @@ help:
 	@echo "  clean        - Remove built binaries"
 	@echo "  test         - Run tests"
 	@echo "  lint         - Run linter"
-	@echo "  check-config - Validate YAML config"

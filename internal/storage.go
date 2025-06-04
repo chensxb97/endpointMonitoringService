@@ -1,17 +1,40 @@
 package internal
 
 import (
+	"fmt"
 	"sync"
 )
 
-func saveEndpointsDB(endpoint string, results chan<- EndpointStatus, wg *sync.WaitGroup) {
-	// TO-DO: Implement endpoint saving logic to DB
+type EndpointLabel struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
 }
 
-func fetchEndpointsDB(endpoint string, results chan<- EndpointStatus, wg *sync.WaitGroup) {
-	// TO-DO: Implement endpoint fetching logic from DB
+type EndpointRecord struct {
+	Endpoint string          `json:"endpoint"`
+	Labels   []EndpointLabel `json:"labels"`
 }
 
-func refreshCache(endpoint string, results chan<- EndpointStatus, wg *sync.WaitGroup) {
-	// TO-DO: Implement endpoint caching logic
+var endpointsInMemory = []EndpointRecord{}
+
+var inMemoryMutex sync.Mutex
+
+func saveEndpointsToMemory(payload EndpointRecord) error {
+	inMemoryMutex.Lock()
+	defer inMemoryMutex.Unlock()
+
+	// push endpint to in-memory storage
+	newEndpoint := EndpointRecord{
+		Endpoint: payload.Endpoint,
+		Labels:   payload.Labels,
+	}
+	endpointsInMemory = append(endpointsInMemory, newEndpoint)
+	fmt.Printf("Saved endpoint to memory: %v", newEndpoint.Endpoint)
+	return nil
+}
+
+func fetchEndpointsMemory() []EndpointRecord {
+	inMemoryMutex.Lock()
+	defer inMemoryMutex.Unlock()
+	return endpointsInMemory
 }

@@ -6,14 +6,14 @@ import { Card } from "antd"
 const backendUrl = process.env.REACT_APP_BACKEND_URL
 const timeLimit = 5000
 
-const StatusList = () => {
+const Dashboard = () => {
     const [statuses, setStatuses] = useState([])
     const [loading, setLoading] = useState(true)
     const [animateKey, setAnimateKey] = useState(0)
 
     const fetchStatuses = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/status`)
+            const response = await axios.get(`${backendUrl}/api/statuses`)
             if (response?.data) {
                 setStatuses(response.data)
             }
@@ -45,6 +45,7 @@ const StatusList = () => {
                             <thead>
                                 <tr>
                                     <th style={{ padding: "10px", border: "2px solid #ddd" }}>Endpoint</th>
+                                    <th style={{ padding: "10px", border: "2px solid #ddd" }}>Custom Labels</th>
                                     <th style={{ padding: "10px", border: "2px solid #ddd" }}>Status</th>
                                 </tr>
                             </thead>
@@ -53,6 +54,17 @@ const StatusList = () => {
                                     <tr key={status?.endpoint}>
                                         <td style={{ padding: "15px", border: "2px solid #ddd" }}>
                                             {status?.endpoint}
+                                        </td>
+                                        <td style={{ padding: "15px", border: "2px solid #ddd" }}>
+                                            {status?.labels?.length > 0 ? (
+                                                status.labels.map((label, index) => (
+                                                    <div key={index}>
+                                                        {label.key}{` -> `}{label.value}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div>No custom labels</div>
+                                            )}
                                         </td>
                                         <td
                                             key={animateKey}
@@ -76,4 +88,4 @@ const StatusList = () => {
         </Card>)
 }
 
-export default StatusList
+export default Dashboard

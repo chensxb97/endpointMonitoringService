@@ -10,17 +10,15 @@ const EndpointForm = () => {
 
     const onFinish = async (values) => {
         try {
-            const response = await axios.post(`${backendUrl}/targets/create`, {
+            await axios.post(`${backendUrl}/api/targets/create`, {
+                endpoint: values.endpoint,
+                labels: values.labels || []
+            }, {
                 headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    endpoint: values.endpoint,
-                    labels: values.labels || [],
-                })
-            })
-            const data = await response.json()
-            console.log("Endpoint created successfully:", data)
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log("Submitted endpoint record!")
             form.resetFields()
         } catch (error) {
             console.error("Error creating endpoint:", error)

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Layout, Button } from 'antd'
 import EndpointForm from './EndpointForm'
-import StatusList from './StatusList'
+import Dashboard from './Dashboard'
 
 const { Content } = Layout
 
@@ -30,7 +30,7 @@ export default function Navigation() {
                     </Button>
                 </div>
                 {active === DASHBOARD && (
-                    <StatusList />
+                    <Dashboard />
                 )}
                 {active === CREATE_ENDPOINT && (
                     <EndpointForm />

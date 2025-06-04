@@ -1,80 +1,60 @@
 package internal
 
 import (
+	"fmt"
 	"log"
-	"sync"
 )
 
-type EndpointStatus struct {
-	Endpoint string `json:"endpoint"`
-	Status   string `json:"status"`
-}
-
-type EndpointLabel struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
-}
-
-type EndpointRecord struct {
-	Endpoint string                   `json:"endpoint"`
-	Labels   map[string]EndpointLabel `json:"labels"`
-}
-
 type EndpointController struct {
-	statuses []EndpointStatus
-	mu       sync.Mutex
 }
 
 func NewEndpointController() *EndpointController {
-	return &EndpointController{
-		statuses: []EndpointStatus{},
-	}
+	return &EndpointController{}
 }
 
 var inspectionCount = 0
+var refreshCount = 0
 
-var endpointRecordCache = []EndpointRecord{} // This is your cache of endpoint records
-
-func (endpointController *EndpointController) CheckHealth(endpoints []string) {
-	var wg sync.WaitGroup
-	endpointController.statuses = []EndpointStatus{}
-	results := make(chan EndpointStatus)
-	for _, endpoint := range endpoints {
-		wg.Add(1)
-		go func(endpoint string) {
-			checkEndpoint(endpoint, results, &wg)
-		}(endpoint)
+func (endpointController *EndpointController) RefreshStatuses() {
+	err := refreshStatuses()
+	if err != nil {
+		log.Printf("Error refreshing statuses: %v", err)
+		return
 	}
-
-	// Make wg.Wait a goroutine to prevent unbuffered channel deadlock
-	go func() {
-		wg.Wait()      // wait for all go routines to finish by wg.Done()
-		close(results) // close channel
-	}()
-
-	for status := range results {
-		endpointController.statuses = append(endpointController.statuses, status)
-	}
-
 	inspectionCount += 1
 	log.Printf("Inspection Count: %d", inspectionCount)
 }
 
 func (endpointController *EndpointController) GetStatuses() []EndpointStatus {
-	endpointController.mu.Lock()
-	defer endpointController.mu.Unlock()
-	return endpointController.statuses
+	statuses := fetchStatusList()
+	log.Println("Returned endpoint statuses.")
+	return statuses
 }
 
 func (endpointController *EndpointController) RefreshEndpoints() {
-	log.Println("TO-DO: Implement Cache Refresh Logic")
+	err := refreshCache()
+	if err != nil {
+		log.Printf("Error refreshing endpoints: %v", err)
+		return
+	}
+	refreshCount += 1
+	log.Printf("Refresh Count: %d", refreshCount)
 }
 
-func (endpointController *EndpointController) GetEndpointCache() []EndpointRecord {
-	log.Println("TO-DO: Implement Cache Fetching Logic")
-	return endpointRecordCache
+func (endpointController *EndpointController) GetEndpointCache() []EndpointCacheRecord {
+	endpointCache := fetchCache()
+	if len(endpointCache) != 0 {
+		log.Println("Returned endpoint cache.")
+		return endpointCache
+	}
+	log.Println("Empty endpoint cache returned.")
+	return []EndpointCacheRecord{}
 }
 
-func (endpointController *EndpointController) CreateEndpoints() {
-	log.Println("TO-DO:Implement Endpoint Creation Logic ")
+func (endpointController *EndpointController) CreateEndpoints(payload EndpointRecord) error {
+	fmt.Println("Creating Endpoint with payload: ", payload)
+	if err := saveEndpointsToMemory(payload); err != nil {
+		log.Printf("Error creating endpoint: %v", err)
+	}
+	return nil
 }
