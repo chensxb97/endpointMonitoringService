@@ -54,10 +54,10 @@ func refreshStatuses() error {
 
 	go func() {
 		wg.Wait()
-		close(results)
+		close(results) // Close unbuffered channel after wait group is done
 	}()
 
-	statusList = make([]EndpointStatus, len(results)) // reset statuses
+	statusList = make([]EndpointStatus, len(results)) // Reset statuses
 	for status := range results {
 		statusList = append(statusList, status)
 	}
