@@ -29,7 +29,6 @@ npm run start
 
 ![Endpoint Onboarding Form](/assets/EndpointForm.png)
 
-
 ## Go Backend
 - Receives endpoints from frontend, saving them in storage. For this example, I am keeping them in memory for simplicity.
 - Caches the endpoints in regularly intervals.
@@ -55,12 +54,12 @@ make run
 
 2. Run Blackbox Exporter.
 
-**Binary**
+**Running from Binary**
 ```shell
 ./blackbox_exporter --config.file=./configs/blackbox.yml
 ```
 
-**Built from Scratch**
+**Build and run manually**
 ```shell
 cd blackbox_exporter/ && go run main.go --config.file=./configs/blackbox.yml
 ```
@@ -74,12 +73,12 @@ cd blackbox_exporter/ && go run main.go --config.file=./configs/blackbox.yml
 
 2. Run Prometheus
 
-**Binary**
+**Running from Binary**
 ```shell
 ./prometheus --config.file=./configs/prometheus.yml
 ```
 
-**Built from Scratch**
+**Build and run manually**
 ```shell
 cd prometheus/ && make build
 ./prometheus --config.file=./configs/prometheus.yml
