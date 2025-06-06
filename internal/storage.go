@@ -12,6 +12,7 @@ type EndpointLabel struct {
 
 type EndpointRecord struct {
 	Endpoint string          `json:"endpoint"`
+	Module   string          `json:"module"`
 	Labels   []EndpointLabel `json:"labels"`
 }
 
@@ -26,6 +27,7 @@ func saveEndpointsToMemory(payload EndpointRecord) error {
 	// push endpint to in-memory storage
 	newEndpoint := EndpointRecord{
 		Endpoint: payload.Endpoint,
+		Module:   payload.Module,
 		Labels:   payload.Labels,
 	}
 	endpointsInMemory = append(endpointsInMemory, newEndpoint)

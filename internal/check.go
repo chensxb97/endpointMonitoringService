@@ -8,6 +8,7 @@ import (
 
 type EndpointStatus struct {
 	Endpoint string          `json:"endpoint"`
+	Module   string          `json:"module"`
 	Labels   []EndpointLabel `json:"labels"`
 	Status   string          `json:"status"`
 }
@@ -31,6 +32,7 @@ func checkEndpoint(endpoint EndpointRecord, results chan<- EndpointStatus, wg *s
 
 	results <- EndpointStatus{
 		Endpoint: endpoint.Endpoint,
+		Module:   endpoint.Module,
 		Labels:   endpoint.Labels,
 		Status:   status,
 	}

@@ -45,6 +45,7 @@ const Dashboard = () => {
                             <thead>
                                 <tr>
                                     <th style={{ padding: "10px", border: "2px solid #ddd" }}>Endpoint</th>
+                                    <th style={{ padding: "10px", border: "2px solid #ddd" }}>Module</th>
                                     <th style={{ padding: "10px", border: "2px solid #ddd" }}>Custom Labels</th>
                                     <th style={{ padding: "10px", border: "2px solid #ddd" }}>Status</th>
                                 </tr>
@@ -54,6 +55,9 @@ const Dashboard = () => {
                                     <tr key={status?.endpoint}>
                                         <td style={{ padding: "15px", border: "2px solid #ddd" }}>
                                             {status?.endpoint}
+                                        </td>
+                                        <td style={{ padding: "15px", border: "2px solid #ddd" }}>
+                                            {status?.module}
                                         </td>
                                         <td style={{ padding: "15px", border: "2px solid #ddd" }}>
                                             {status?.labels?.length > 0 ? (

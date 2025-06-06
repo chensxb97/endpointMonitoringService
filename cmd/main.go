@@ -13,7 +13,7 @@ func main() {
 	// For this project, I'm keeping it simple and using an in-memory cache to simulate the database.
 
 	go func() {
-		ticker := time.NewTicker(5 * time.Minute) // Refresh every 5 minutes
+		ticker := time.NewTicker(5 * time.Second) // Refresh every 5 seconds
 		defer ticker.Stop()
 		for range ticker.C {
 			go endpointController.RefreshEndpoints() // Refresh endpoint cache

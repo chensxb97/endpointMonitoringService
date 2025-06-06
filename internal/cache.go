@@ -26,8 +26,9 @@ func refreshCache() error {
 			Labels:   make(map[string]string),
 		}
 
+		endpointCache[i].Labels["module"] = record.Module // add module label
 		for _, label := range record.Labels {
-			endpointCache[i].Labels["__meta_"+label.Key] = label.Value
+			endpointCache[i].Labels[label.Key] = label.Value
 		}
 	}
 

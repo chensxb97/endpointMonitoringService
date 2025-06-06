@@ -1,6 +1,6 @@
 import React from "react"
 import axios from "axios"
-import { Card, Form, Input, Button, Space, message } from "antd"
+import { Select, Card, Form, Input, Button, Space } from "antd"
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons"
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL
@@ -12,15 +12,17 @@ const EndpointForm = () => {
         try {
             await axios.post(`${backendUrl}/targets/create`, {
                 endpoint: values.endpoint,
+                module: values.module || "http_2xx",
                 labels: values.labels || []
             }, {
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
-            message.success("Submitted endpoint record!")
+            form.resetFields()
+            alert("Endpoint created successfully!")
         } catch (error) {
-            message.error("Error creating endpoint:", error)
+            alert(`Error creating endpoint: ${error}`)
         }
     }
 
@@ -34,7 +36,17 @@ const EndpointForm = () => {
                 >
                     <Input placeholder="https://example.com" />
                 </Form.Item>
-
+                <Form.Item
+                    label="Module"
+                    name="module"
+                    rules={[{ required: true, message: "Please select a module!" }]}
+                >
+                    <Select placeholder="Select Module" options={
+                        [
+                            { label: "http_2xx", value: "http_2xx" }
+                        ]
+                    } />
+                </Form.Item>
                 <Form.List name="labels">
                     {(fields, { add, remove }) => (
                         <>
