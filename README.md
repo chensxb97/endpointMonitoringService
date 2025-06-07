@@ -1,5 +1,5 @@
 ## Endpoint Monitoring Service
-An end-to-end POC for scalable and easy onboarding endpoints for Blackbox Exporter monitoring.
+An end-to-end scalable and easy-to-maintain endpoint monitoring service, powered by Prometheus and Blackbox Exporter.
 
 This project requires setting up 4 different components: 1) React Frontend, 2) Go Backend, 3) Blackbox Exporter, 4) Prometheus.
 
